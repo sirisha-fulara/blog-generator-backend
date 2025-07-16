@@ -9,8 +9,10 @@ CORS(app)
 
 
 # Configure your Gemini API key here
-GEMINI_API_KEY = "AIzaSyBEs4oQTz3vbDimpuQZ21p5D964MK72HiQ"
+import os
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
+
 
 def get_amazon():
     url = "https://www.amazon.in/gp/bestsellers"
