@@ -56,17 +56,21 @@ def products():
 
 @app.route("/generate", methods=["POST"])
 def generate():
-    data = request.get_json()
-    product = data.get("product")
-    if not product:
-        return jsonify({"error": "Product name required"}), 400
-    
     try:
+        data = request.get_json()
+        product = data.get("product")
+        if not product:
+            return jsonify({"error": "Product name required"}), 400
+        
         keywords = get_seo_keywords(product)
         blog = generate_blog(product, keywords)
         return jsonify({"title": product, "blog": blog})
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        import traceback
+        traceback.print_exc()  # logs full error
+        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)
