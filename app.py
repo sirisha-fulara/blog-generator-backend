@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from bs4 import BeautifulSoup
 import requests
 import google.generativeai as genai
 
 app = Flask(__name__)
+CORS(app, origins=["https://sirisha-fulara.github.io"])
+
 
 # Configure your Gemini API key here
 GEMINI_API_KEY = "AIzaSyBEs4oQTz3vbDimpuQZ21p5D964MK72HiQ"
