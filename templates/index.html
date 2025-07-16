@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amazon Trendy Items Blog Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+</head>
+<body>
+  <div class="glass-container">
+    <h1 class="main-title">🛍️ Trendy Amazon Blog Generator</h1>
+    
+    <div class="form-area">
+      <select id="productSelect" class="select-box">
+        <option value="">-- Select a Product --</option>
+      </select>
+      <button id="generateBtn" class="generate-btn" disabled>Generate Blog 🚀</button>
+    </div>
+
+    <div id="result" class="result-box" style="display:none;">
+      <h2 id="blogTitle" class="blog-title"></h2>
+      <p id="blogContent" class="blog-content"></p>
+    </div>
+  </div>
+
+  <script>
+    async function fetchProducts() {
+      const res = await fetch("https://blog-generator-backend-ilie.onrender.com/products");
+      if (res.ok) {
+        const products = await res.json();
+        const select = document.getElementById("productSelect");
+        products.forEach(prod => {
+          const opt = document.createElement("option");
+          opt.value = prod;
+          opt.textContent = prod;
+          select.appendChild(opt);
+        });
+      }
+    }
+
+    async function generateBlog() {
+      const product = document.getElementById("productSelect").value;
+      if (!product) return alert("Please select a product");
+
+      const btn = document.getElementById("generateBtn");
+      btn.disabled = true;
+      btn.textContent = "Generating...";
+
+      const res = await fetch("https://blog-generator-backend-ilie.onrender.com/generate", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({product})
+      });
+
+      btn.disabled = false;
+      btn.textContent = "Generate Blog 🚀";
+
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById("result").style.display = "block";
+        document.getElementById("blogTitle").textContent = data.title;
+        document.getElementById("blogContent").textContent = data.blog;
+      } else {
+        alert("Error: " + data.error);
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateBlog);
+    document.getElementById("productSelect").addEventListener("change", () => {
+      document.getElementById("generateBtn").disabled = !document.getElementById("productSelect").value;
+      document.getElementById("result").style.display = "none";
+    });
+
+    window.onload = fetchProducts;
+  </script>
+</body>
+</html>
