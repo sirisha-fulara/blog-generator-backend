@@ -5,6 +5,8 @@ import requests
 import google.generativeai as genai
 
 app = Flask(__name__)
+CORS(app)  
+
 
 # Configure your Gemini API key here
 GEMINI_API_KEY = "AIzaSyBEs4oQTz3vbDimpuQZ21p5D964MK72HiQ"
